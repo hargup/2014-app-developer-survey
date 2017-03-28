@@ -136,7 +136,7 @@ qs = [
     "How do you access code created by others?",
     "Roughly, how often do you check the terms or conditions of the licenses when using code created by others within your apps?",
     "How has the code that you use in your projects created by others been licensed?",
-    "For what reason(s) have you reverse engineered / decompiled apps in the past?",
+    "For what reason(s) have you\xc2\xa0reverse engineered / decompiled apps in the past?",
     "How often have you used parts of code accessed by reverse engineering / decompilation in your work?",
     "Are you at all concerned about potentially or accidentally infringing upon or violating another's mobile app?",
     "How often do you license your designs upon sharing them with others or in the app store?",
