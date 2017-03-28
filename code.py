@@ -62,8 +62,8 @@ def dict_apply(func, df_dict):
     return rv
 
 
-def clean_ans(answers):
-    return map(lambda x: x.strip(" []"), answers)
+def clean_ans(answer):
+    return answer.strip(" []")
 
 
 def get_cols(df, keyword):
@@ -82,9 +82,13 @@ def print_dict(inp_dict, d=0):
             print_dict(val, d=d+1)
 
 
-# For some reason Counter isn't combining all the nan's in the other answer
+def get_conds(df, ques):
+    answers = get_answers(df, ques)
+    rv = dict()
+    for answer in answers.keys():
+        rv[clean_ans(answer)] = (df["{}?{}".format(ques, answer)] == "Yes")
 
-
+    return rv
 
 
 code_license_questions = [
@@ -174,7 +178,7 @@ def plot_bar():
     ax.set_ylabel('Scores')
     ax.set_title('Scores by group and gender')
     ax.set_xticks(ind+width)
-    ax.set_xticklabels(clean_ans(ans_q49.keys()))
+    ax.set_xticklabels(map(clean_ans, ans_q49.keys()))
 
     ax.legend((b1[0], b2[0]), ('Q49', 'Q50'))
 
