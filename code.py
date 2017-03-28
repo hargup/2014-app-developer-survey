@@ -35,6 +35,33 @@ def get_answers_verticles(df, base_ques, verticles):
     return rv
 
 
+def divide_dfs(df, conds):
+    """
+    Take a dictionary of named conditions and returns a dictionary with same
+    keys but with the conditions applied to the dataframe
+    """
+    rv = dict()
+    for name, cond in conds.items():
+        df_ = df[cond]
+        rv[name] = df_
+
+    return rv
+
+
+def dict_apply(func, df_dict):
+    """
+    Recursively apply a function to the leaves of  dictionary of dictionary
+    """
+    rv = dict()
+    for key, val in df_dict.items():
+        if type(val) is not dict:
+            rv[key] = func(val)
+        else:
+            rv[key] = dict_apply(func, val)
+
+    return rv
+
+
 def clean_ans(answers):
     return map(lambda x: x.strip(" []"), answers)
 
