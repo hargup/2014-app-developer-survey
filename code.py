@@ -76,6 +76,8 @@ def print_dict(inp_dict, d=0):
     """
     Pretty prints a multilevel dictionary
     """
+    if d == 0:
+        print("----")
     for key, val in inp_dict.items():
         if type(val) is not dict:
             print("{} {}: {}".format("\t"*d, key, val))
@@ -83,14 +85,18 @@ def print_dict(inp_dict, d=0):
             print("{}#{} {}".format("\t"*d, "#"*d, key))
             print_dict(val, d=d+1)
 
+    if d == 0:
+        print("----")
+
 
 def get_conds(df, ques):
-    answers = get_answers(df, ques)
+    cols_split = [x.split('?') for x in df.columns if ques in x]
     rv = dict()
-    for answer in answers.keys():
-        rv[clean_ans(answer)] = (df["{}?{}".format(ques, answer)] == "Yes")
+    for col_split in cols_split:
+        rv[clean_ans(col_split[-1])] = (df["?".join(col_split)] == "Yes")
 
     return rv
+
 
 qs = [
     "dummy",  # Dummy question to start indexing from 1
