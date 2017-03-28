@@ -29,7 +29,7 @@ def get_answers_verticles(df, base_ques, verticles):
         rv_ = dict()
         for name, cond in verticles.items():
             df_ = df[cond]
-            rv_[name] = Counter(df_["{}?{}".format(base_ques, answer)])
+            rv_[name] = dict(Counter(df_["{}?{}".format(base_ques, answer)]))
         rv[answer] = rv_
 
     return rv
@@ -70,31 +70,16 @@ def get_cols(df, keyword):
     return [x for x in df.columns if keyword in x]
 
 
-def print_counter(cntr):
-    for k, v in cntr.items():
-        print("{}: {}".format(k, v))
-
-
-def print_answers(df, base_ques):
-    print("----")
-    print(base_ques)
-    print("----")
-
-    for ans, vals in get_answers(df, base_ques).items():
-        print(ans)
-        print_counter(vals)
-
-
-def print_answers_verticles(df, base_ques, verticles):
-    print("\n")
-    print(base_ques)
-    print("----\n")
-
-    for ans, vals in get_answers_verticles(df, base_ques, verticles).items():
-        print("\n# {}\n".format(ans))
-        for vert, cntr in vals.items():
-            print("## {}".format(vert))
-            print_counter(cntr)
+def print_dict(inp_dict, d=0):
+    """
+    Pretty prints a multilevel dictionary
+    """
+    for key, val in inp_dict.items():
+        if type(val) is not dict:
+            print("{} {}: {}".format("\t"*d, key, val))
+        else:
+            print("{}#{} {}".format("\t"*d, "#"*d, key))
+            print_dict(val, d=d+1)
 
 
 # For some reason Counter isn't combining all the nan's in the other answer
