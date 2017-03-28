@@ -19,7 +19,7 @@ def get_answers(df, base_ques):
     cols_split = [x.split('?') for x in df.columns if base_ques in x]
     rv = dict()
     for col_split in cols_split:
-        rv[col_split[-1]] = Counter(df["?".join(col_split)])
+        rv[col_split[-1]] = dict(Counter(df["?".join(col_split)]))
 
     return rv
 
