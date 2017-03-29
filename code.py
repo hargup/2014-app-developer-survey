@@ -91,9 +91,27 @@ def print_dict(inp_dict, d=0):
 
 def get_conds(df, ques):
     cols_split = [x.split('?') for x in df.columns if ques in x]
+    if len(cols_split) == 1:
+        return get_conds_flat(df, ques)
+    else:
+        rv = dict()
+        for col_split in cols_split:
+            rv[clean_ans(col_split[-1])] = (df["?".join(col_split)] == "Yes")
+
+        return rv
+
+
+def get_conds_flat(df, ques):
+    cols = get_cols(df, ques)
+    if len(cols) == 1:
+        col = cols[0]
+    else:
+        raise NameError("The question is not \"flat\".")
+
+    answers = set(df[col])
     rv = dict()
-    for col_split in cols_split:
-        rv[clean_ans(col_split[-1])] = (df["?".join(col_split)] == "Yes")
+    for answer in answers:
+        rv[answer] = (df[col] == answer)
 
     return rv
 
