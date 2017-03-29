@@ -24,17 +24,17 @@ def get_answers(df, base_ques):
     return rv
 
 
-def get_answers_verticles(df, base_ques, verticles):
-    answers = [x.split('?')[-1] for x in df.columns if base_ques in x]
-    rv = dict()
-    for answer in answers:
-        rv_ = dict()
-        for name, cond in verticles.items():
-            df_ = df[cond]
-            rv_[name] = dict(Counter(df_["{}?{}".format(base_ques, answer)]))
-        rv[answer] = rv_
-
-    return rv
+# def get_answers_verticles(df, base_ques, verticles):
+#     answers = [x.split('?')[-1] for x in df.columns if base_ques in x]
+#     rv = dict()
+#     for answer in answers:
+#         rv_ = dict()
+#         for name, cond in verticles.items():
+#             df_ = df[cond]
+#             rv_[name] = dict(Counter(df_["{}?{}".format(base_ques, answer)]))
+#         rv[answer] = rv_
+#
+#     return rv
 
 
 def divide_dfs(df, conds):
