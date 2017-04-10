@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 from collections import Counter
-from itertools import combinations
+from itertools import combinations, chain
 
 import matplotlib.pyplot as plt
 
@@ -124,6 +124,20 @@ def get_conds_flat(df, ques):
         rv[answer] = (df[col] == answer)
 
     return rv
+
+
+def count_unique(df, ques):
+    if type(ques) == str:
+        return Counter(np.any(df[get_cols(df, ques)].notnull(), axis=1))[True]
+
+    elif type(ques) == list:
+        return Counter(np.any(df[list(chain(*[get_cols(df, q) for q in ques]))].notnull(), axis=1))[True]
+
+
+def sieve_answers(df, q1, q2):
+    return dict_apply(lambda x: get_answers(x, q1),
+                      divide_dfs(df, get_conds(df, q2)))
+
 
 
 qs = [
