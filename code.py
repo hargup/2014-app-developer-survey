@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 # code, maybe it is worth taking some time to remove this redundancy
 
 # TODO: redesign get_answers so that I can query answers directly from the list
-def get_answers(df, base_ques):
+def get_answers(df, base_ques, count_yes=True):
     """
     returns a dictionary of dictionary with the frequency of each answer
 
@@ -19,7 +19,17 @@ def get_answers(df, base_ques):
     cols_split = [x.split('?') for x in df.columns if base_ques in x]
     rv = dict()
     for col_split in cols_split:
-        rv[col_split[-1]] = dict(Counter(df["?".join(col_split)]))
+        rv_ = dict(Counter(df["?".join(col_split)]))
+        # If case of Yes/No answes show only the value of yes
+        if count_yes:
+            if "Yes" in rv_.keys():
+                rv[col_split[-1]] = rv_["Yes"]
+            elif "No" in rv_.keys():
+                rv[col_split[-1]] = 0
+            else:
+                rv[col_split[-1]] = rv_
+        else:
+            rv[col_split[-1]] = rv_
 
     return rv
 
@@ -89,14 +99,14 @@ def print_dict(inp_dict, d=0):
         print("----")
 
 
-def get_conds(df, ques):
+def get_conds(df, ques, val="Yes"):
     cols_split = [x.split('?') for x in df.columns if ques in x]
     if len(cols_split) == 1:
         return get_conds_flat(df, ques)
     else:
         rv = dict()
         for col_split in cols_split:
-            rv[clean_ans(col_split[-1])] = (df["?".join(col_split)] == "Yes")
+            rv[clean_ans(col_split[-1])] = (df["?".join(col_split)] == val)
 
         return rv
 
@@ -195,8 +205,8 @@ def num_yes(bools):
 
 def plot_bar():
     # Credit: http://stackoverflow.com/a/10369955/1780891
-    ans_q49 = get_answers(df, qs[49])
-    ans_q50 = get_answers(df, qs[50])
+    ans_q49 = get_answers(df, qs[49], count_yes=False)
+    ans_q50 = get_answers(df, qs[50], count_yes=False)
 
     N = len(ans_q49)
 
