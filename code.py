@@ -6,10 +6,6 @@ from itertools import combinations, chain
 import matplotlib.pyplot as plt
 
 
-# XXX: There is some code duplications between verticles and non verticles
-# code, maybe it is worth taking some time to remove this redundancy
-
-# TODO: redesign get_answers so that I can query answers directly from the list
 def get_answers(df, base_ques, count_yes=True):
     """
     returns a dictionary of dictionary with the frequency of each answer
@@ -17,19 +13,25 @@ def get_answers(df, base_ques, count_yes=True):
     NOTE: the base question should end just before '?'
     """
     cols_split = [x.split('?') for x in df.columns if base_ques in x]
+    if len(cols_split) == 1:
+        return dict(Counter(df[base_ques]))
     rv = dict()
     for col_split in cols_split:
         rv_ = dict(Counter(df["?".join(col_split)]))
         # If case of Yes/No answes show only the value of yes
+
+        key = clean_ans(col_split[-1])
         if count_yes:
             if "Yes" in rv_.keys():
-                rv[col_split[-1]] = rv_["Yes"]
-            elif "No" in rv_.keys():
-                rv[col_split[-1]] = 0
+                rv[key] = rv_["Yes"]
+            elif "No" in rv_.keys() and len(rv_.keys()) <= 2:
+                # Q47 has No in options but it isn't a yes no question
+                # XXX: This logic might not generalize
+                rv[key] = 0
             else:
-                rv[col_split[-1]] = rv_
+                rv[key] = rv_
         else:
-            rv[col_split[-1]] = rv_
+            rv[key] = rv_
 
     return rv
 
