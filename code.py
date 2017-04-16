@@ -147,6 +147,16 @@ def sieve_answers(df, q1, q2):
                       divide_dfs(df, get_conds(df, q2)))
 
 
+def print_sieve_answers(df, q1, q2):
+    ans = sieve_answers(df, q1, q2)
+    q2_ans = get_answers(df, q2)
+    for key in q2_ans.keys():
+        num = q2_ans[key]
+        if type(num) is int:
+            print("# {}: {}".format(key, num))
+            print_dict(ans[key], d=1)
+
+
 
 qs = [
     "dummy",  # Dummy question to start indexing from 1
