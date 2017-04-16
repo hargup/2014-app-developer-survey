@@ -129,11 +129,17 @@ def get_conds_flat(df, ques):
 
 
 def count_unique(df, ques):
+    """
+    Counts the number of unique answers to a particular question.
+    When passed a list of questions answers the number of unique respondents
+    who answered both the questions.
+    """
     if type(ques) == str:
         return Counter(np.any(df[get_cols(df, ques)].notnull(), axis=1))[True]
 
     elif type(ques) == list:
-        return Counter(np.any(df[list(chain(*[get_cols(df, q) for q in ques]))].notnull(), axis=1))[True]
+        return Counter(np.all([np.any(df[get_cols(df, q)].notnull(), axis=1)
+                               for q in ques], axis=0))[True]
 
 
 def sieve_answers(df, q1, q2):
